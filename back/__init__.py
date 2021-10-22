@@ -39,10 +39,10 @@ def hello():
 @app.route('/<str_in>')
 def index(str_in):
     str_in = "".join(str_in.split(" "))
-    str_in = "^".join(str_in.split("**"))
-    str_in = "^".join(str_in.split("^+"))
+    str_in = "**".join(str_in.split("^"))
+    str_in = "**".join(str_in.split("**+"))
     str_in = "".join(str_in.split("*"))
-    if "^-" in str_in:
+    if "**-" in str_in:
         return {"error": "A polynomial does not contain negative powers."}
     var = None
     found_var = False
