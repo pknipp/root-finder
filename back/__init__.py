@@ -38,10 +38,11 @@ def hello():
 
 @app.route('/<str_in>')
 def index(str_in):
-    str_in = "".join(str_in.split(" "))
-    str_in = "**".join(str_in.split("^"))
-    str_in = "**".join(str_in.split("**+"))
-    str_in = "".join(str_in.split("*"))
+    str_in = "".join(str_in.split(" ")) # Remove spaces in order to prevent '%20'.
+    str_in = "^".join(str_in.split("**")) # Temporarily replace ** with ^, to allow removal of single *.
+    str_in = "^".join(str_in.split("^+")) # '+' is unnecessary in exponent.
+    str_in = "".join(str_in.split("*")) # Make multiplication implicit rather than explicit.
+    str_in = "**".join(str_in.split("^")) # Replace '^' by '**', to prevent instances of '%5E'.
     if "**-" in str_in:
         return {"error": "A polynomial does not contain negative powers."}
     var = None
