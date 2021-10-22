@@ -1,0 +1,3 @@
+def is_legal_start(char):
+    ascii = ord(char)
+    return ((ascii > 64 and ascii < 91) or (ascii > 96 and ascii < 123) or ascii == 95)

@@ -1,16 +1,5 @@
-- valid in url: letters (UPPER and lower), 0-9, -.*)(
-- reserved characters: percent sign, dollar sign, ampersand, plus sign, comma, forward slash, colon, semi-colon, equal sign, question mark and “@” symbol.
-- valid in Chrome url: +
-- encoded hex versions of various chars (hex indicated by leading %):
-    " "(20), - slash route takes no params, returning only instructions for how to use the API
-- route w/params takes a string representing an equation to be factorized.
-- parse the string, as follows:
-    - Replace each instance of " " with "".
-    - Replace each instance of "**" with "^".
-    - Replace each instance of "^+" with "^".
-    - Replace each instance of "*" with "".
-    - Any instance of "^-" generates an early return, with error message.
-    - Trace thru the string until encountering an underscore or a letter (upper- or lower-case), which itself should be identified as the first character of the string.  Continue to trace until finding a character which is not an acceptable character (letter, underscore, or number).  This defines the end of the string and hence the string itself.  (This equates to the js rule - excluding $ - or the python rule.)
+- valid in url: letters (UPPER and lower), 0-9, -.*)(+ (latter is "reserved" but works in Chrome & Safari)
+- parse the string, as follows: 
     - Now string_tot = str/var/str/var/str/etc
     - If the stuff preceding the first string contains a non-leading "+" or "-":
         split this on that sign (and put that sign on 2nd element), in which case
