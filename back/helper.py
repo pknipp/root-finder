@@ -28,7 +28,7 @@ def laguer(a, x, eps, polish):
             b = x * b + a[j]
             err = cmath.polar(b)[0] + abx * err
         err *= epss
-        print(iter, x)
+        # print(iter, x)
         if (cmath.polar(b)[0] <= err):
             return x
         g = d / b
@@ -53,16 +53,50 @@ def laguer(a, x, eps, polish):
                 return x
     return "too many iterations"
 
-a = [2, -3, 1, 3, 5]
-x = 0
-x = laguer(a, x, 1e-6, True)
-print("x = ", x)
-sum = 0
-pow = 1
-for coef in a:
-    sum += coef * pow
-    pow *= x
-print("At this point the function equals ", sum)
+# a = [2, -3, 1, 3, 5]
+# x = 0
+# x = laguer(a, x, 1e-6, False)
+# print("x = ", x)
+# sum = 0
+# pow = 1
+# for coef in a:
+    # sum += coef * pow
+    # pow *= x
+# print("At this point the function equals ", sum)
+
+def zroots(a, polish):
+    # Make a copy of coefficients list, for deflation.
+    ad = list(a)
+    m = len(a) - 1
+    eps = 1e-6
+    roots = list()
+    for j in range(m):
+        new_m = m - j
+        x = laguer(ad, complex(0, 0), eps, False)
+        if abs(x.imag) <= 2 * abs(x.real) * eps * eps:
+            x = complex(x.real, 0)
+        roots.append(x)
+        b = ad[new_m]
+        for jj in range(new_m - 1, -1, -1):
+            c = ad[jj]
+            ad[jj] = b
+            b = x * b + c
+        ad.pop()
+    return roots
+
+a = [-6, 11, -6, 1]
+print(zroots(a, True))
+# x = 0
+# x = laguer(a, x, 1e-6, False)
+# print("x = ", x)
+# sum = 0
+# pow = 1
+# for coef in a:
+    # sum += coef * pow
+    # pow *= x
+# print("At this point the function equals ", sum)
+
+
 
 instructions = "After '...herokuapp.com' above you should type a slash ('/') followed by your polynomial, formatted according to one of the two specifications below."
 formats = [ \
