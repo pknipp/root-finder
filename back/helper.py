@@ -10,12 +10,13 @@ def is_legal_char(char):
     ascii = ord(char)
     return (ascii > 47 and ascii < 58)
 
-def laguer(a, m, x, eps, polish):
+def laguer(a, x, eps, polish):
+    m = len(a) - 1
     zero = complex(0, 0)
     epss = 6e-8
     maxit = 100
     dxold = cmath.polar(x)[0]
-    for iter in range(1, maxit):
+    for iter in range(0, maxit):
         b = a[m]
         err = cmath.polar(b)[0]
         d = zero
@@ -26,31 +27,42 @@ def laguer(a, m, x, eps, polish):
             d = x * d + b
             b = x * b + a[j]
             err = cmath.polar(b)[0] + abx * err
+        err *= epss
+        print(iter, x)
         if (cmath.polar(b)[0] <= err):
-            dx = zero
-            return
-        else:
-            g = d / b
-            g2 = g * g
-            h = g2 - 2 * f / b
-            sq = cmath.sqrt((m - 1) * (m * h - g2))
-            gp = g + sq
-            gm = g - sq
-            if cmath.polar(gp)[0] < cmath.polar(gm)[0]:
-                gp = gm
-            dx = m / gp
+            return x
+        g = d / b
+        g2 = g * g
+        h = g2 - 2 * f / b
+        sq = cmath.sqrt((m - 1) * (m * h - g2))
+        gp = g + sq
+        gm = g - sq
+        if cmath.polar(gp)[0] < cmath.polar(gm)[0]:
+            gp = gm
+        dx = m / gp
         x1 = x - dx
         if (x == x1):
-            return
+            return x
         x = x1
         cdx = cmath.polar(dx)[0]
         if iter > 6 and cdx >= dxold:
-            return
+            return x
         dxold = cdx
         if not polish:
             if cmath.polar(dx)[0] <= eps * cmath.polar(x)[0]:
-                return
-    return {"message": "too many iterations"}
+                return x
+    return "too many iterations"
+
+a = [2, -3, 1, 3, 5]
+x = 0
+x = laguer(a, x, 1e-6, True)
+print("x = ", x)
+sum = 0
+pow = 1
+for coef in a:
+    sum += coef * pow
+    pow *= x
+print("At this point the function equals ", sum)
 
 instructions = "After '...herokuapp.com' above you should type a slash ('/') followed by your polynomial, formatted according to one of the two specifications below."
 formats = [ \

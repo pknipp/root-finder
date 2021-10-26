@@ -1,7 +1,0 @@
-from . import is_legal_start
-
-def is_legal_char(char):
-    if is_legal_start.is_legal_start(char):
-        return True
-    ascii = ord(char)
-    return (ascii > 47 and ascii < 58)
