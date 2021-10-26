@@ -34,7 +34,7 @@ def react_root(path):
 
 @app.route('/')
 def hello():
-    return {"instructions": helper.instructions}
+    return {"instructions": [{"general": helper.instructions}, {"formats": helper.formats}]}
 
 @app.route('/<str_in>')
 def index(str_in):
@@ -59,5 +59,15 @@ def index(str_in):
                 break
     if var is None:
         return {"error": "No legal variable name was found."}
-    return {"variable string": var}
+    strs = str_in.split(var)
+    end = strs.pop()
+    if not len(strs):
+        return {"message": "This polynomial has only one term, so any/all roots are zero."}
+    front = strs.pop(0)
+    coefs = {} # This dict'll have two properties: exponent and coefficient
+    # make a helper function which checks an element of strs for more than 0 or 1 +/- sign
+    # if such an excess is detected, split it, and reinsert it assuming exponent of leading term is zero
+    for str in strs:
+        pass
+    return {"variable string": var, "strs": strs}
     # return {"incoming_string": incoming_string}

@@ -1,12 +1,13 @@
 - valid in url: letters (UPPER and lower), 0-9, -.*)(+ (latter is "reserved" but works in Chrome & Safari)
-- parse the string, as follows: 
+- parse the string, as follows:
     - Now string_tot = str/var/str/var/str/etc
-    - If the stuff preceding the first string contains a non-leading "+" or "-":
+    - parse the str after each var, which should begin with "**" & be immediately followed by the digit 0-9, which should itself be immediately followed by any digit 0-9, until reaching a non-digit character.
+    - If the stuff preceding the first (ANY?) string contains a non-leading "+" or "-":
         split this on that sign (and put that sign on 2nd element), in which case
         string_tot = const_str/var/^0/str/var/str/var/str/etc
          preceding first string can be either "" (1), "-" (-1), or any (complex?)number.  NOTE THAT THE FIRST STRING MAY CONTAIN THE CONSTANT TERM, which is indicated if it contains a non-leading "+" or "-"
     - now string_tot = #/var/str/var/str/etc
-    - parse the str after each var, which should begin with "^" & be immediately followed by the digit 0-9, which should itself be immediately followed by any digit 0-9, until reaching a non-digit character.
+
     - now total string is of the form #/var/^/int/str/var/^/int/str/var/etc
     - if the leading char of str is "/" followed by a positive number followed by "+" or "-", interpret this as the inverse of the coefficient for the preceding term.  (Do not allow more than one "/"?).
     - Now total string is of the form #/var/^/int/str/var/^/int/str/etc
