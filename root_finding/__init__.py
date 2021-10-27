@@ -56,40 +56,15 @@ def hello():
     # ]}
 
 @app.route('/<str_in>')
-def index(str_in):
+def return_html(str_in):
     str_in = "".join(str_in.split(" ")) # Remove spaces in order to prevent '%20'.
-    if str_in[0] == '[':
-        a = list(map(lambda x: float(x), str_in[1:-1].split(",")))
-        roots = helper.zroots(a, True)
-        n = 16
-        product = 1
-        sum = 0
-        func_mag = 0
-        for root in roots:
-            product *= cmath.polar(root)[0]
-            sum += root.real
-            func = 0
-            pow = 1
-            for coef in a:
-                func += coef * pow
-                pow *= root
-            func_mag += cmath.polar(func)[0]
-        product *= (a[len(a) - 1] / a[0])
-        product -= 1
-        sum *= -(a[len(a) - 1] / a[len(a) - 2])
-        sum -= 1
-        roots = list(map(lambda x: str(round(x.real, n)) + (((' + ' if x.imag > 0 else ' - ') + str(abs(x.imag)) + 'j') if x.imag else ''), roots))
-        html = "<h3><p align=center>Results:</p></h3><ul>"
-        html += "<li>your polynomial: " + str_in + "</li>"
-        html += "<li>validity check of roots (All three numbers should be small.): </li><ul>"
-        html += "<li>based on product of roots: " + str(product) + " </li>"
-        html += "<li>based on sum of roots: " + str(sum) + " </li>"
-        html += "<li>based on sum of values of polynomial: " + str(func_mag) + " </li></ul>"
-        html += "<li>roots (including imaginary parts - if complex):<ul>"
-        for root in roots:
-            html += "<li>" + root + "</li>"
-        html += "</ul>"
-        return html
+    return helper.parse_roots(str_in, False)
+
+@app.route('/json/<str_in>')
+def return_json(str_in):
+    str_in = "".join(str_in.split(" ")) # Remove spaces in order to prevent '%20'.
+    return helper.parse_roots(str_in, True)
+
     str_in = "^".join(str_in.split("**")) # Temporarily replace ** with ^, to allow removal of single *.
     str_in = "^".join(str_in.split("^+")) # '+' is unnecessary in exponent.
     str_in = "".join(str_in.split("*")) # Make multiplication implicit rather than explicit.

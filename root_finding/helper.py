@@ -53,17 +53,6 @@ def laguer(a, x, eps, polish):
                 return x
     return "too many iterations"
 
-# a = [2, -3, 1, 3, 5]
-# x = 0
-# x = laguer(a, x, 1e-6, False)
-# print("x = ", x)
-# sum = 0
-# pow = 1
-# for coef in a:
-    # sum += coef * pow
-    # pow *= x
-# print("At this point the function equals ", sum)
-
 def zroots(a, polish):
     # Make a copy of coefficients list, for deflation.
     ad = list(a)
@@ -88,8 +77,53 @@ def zroots(a, polish):
             roots[j] = root
     return sorted(roots, key = lambda x: x.real)
 
+def parse_roots(str_in, json):
+    if str_in[0] == '[':
+        a = list(map(lambda x: float(x), str_in[1:-1].split(",")))
+        roots = zroots(a, True)
+        n = 16
+        product = 1
+        sum = 0
+        func_mag = 0
+        for root in roots:
+            product *= cmath.polar(root)[0]
+            sum += root.real
+            func = 0
+            pow = 1
+            for coef in a:
+                func += coef * pow
+                pow *= root
+            func_mag += cmath.polar(func)[0]
+        product *= (a[len(a) - 1] / a[0])
+        product -= 1
+        sum *= -(a[len(a) - 1] / a[len(a) - 2])
+        sum -= 1
+        roots = list(map(lambda x: str(round(x.real, n)) + (((' + ' if x.imag > 0 else ' - ') + str(abs(x.imag)) + 'j') if x.imag else ''), roots))
+        heading = "Results"
+        your_poly = "your polynomial: " + str_in
+        validity = "validity check of roots (All three numbers should be small.)"
+        checks = [ \
+            "based on product of roots: " + str(product), \
+            "based on sum of roots: " + str(sum), \
+            "based on sum of values of polynomial: " + str(func_mag), \
+                ]
+        root_str = "roots (including imaginary parts, if complex):"
+        if json:
+            return {heading: [your_poly, {validity: checks}, {root_str: roots}]}
+        else:
+            html = "<p align=center>" + heading + "</p>"
+            html += "<ul><li>" + your_poly + "</li>"
+            html += "<li>" + validity + "</li><ul>"
+            for check in checks:
+                html += "<li>" + check + "</li>"
+            html += "</ul><li>" + root_str + "</li><ul>"
+            for root in roots:
+                html += "<li>" + root + "</li>"
+            return html + "</ul></ul>"
+
 general = [ \
-    "After '...herokuapp.com' above you should type a slash ('/') followed by your polynomial.  Input your polynomial according to one of the two formats below: 'array' or 'string'.", \
+    "After '...herokuapp.com' above you should type '/json/' and then your polynomial.  Input your polynomial according to one of the two formats below: 'array' or 'string'.", \
+    "If you want the response in html rather than in json, omit '/json' from the address.", \
     "Spaces are allowed - but discouraged - in whichever format you use, because a '%20' will replace each space after you hit 'return', thereby making the address uglier.", \
     "The resulting page will show some 'validity checks', along with the roots themselves." \
 ]
