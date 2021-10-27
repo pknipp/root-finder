@@ -2,7 +2,7 @@ import os
 from flask import Flask, render_template, request, session, redirect
 from flask_cors import CORS
 from flask_wtf.csrf import CSRFProtect, generate_csrf
-from back.config import Config
+from root_finding.config import Config
 import json
 import cmath
 from . import helper
@@ -50,7 +50,9 @@ def index(str_in):
             check_product *= cmath.polar(root)[0]
             check_sum += root.real
         check_product *= (a[len(a) - 1] / a[0])
+        check_product -= 1
         check_sum *= -(a[len(a) - 1] / a[len(a) - 2])
+        check_sum -= 1
         roots = list(map(lambda x: str(round(x.real, n)) + (((' + ' if x.imag > 0 else ' - ') + str(abs(x.imag)) + 'j') if x.imag else ''), roots))
         return {"roots": roots, "check_product": check_product, "check_sum": -check_sum}
     str_in = "".join(str_in.split(" ")) # Remove spaces in order to prevent '%20'.
@@ -76,8 +78,8 @@ def index(str_in):
         return {"error": "No legal variable name was found."}
     strs = str_in.split(var)
     end = strs.pop()
-    if not len(strs):
-        return {"message": "This polynomial has only one term, so any/all roots are zero."}
+    # if not len(strs):
+        # return {"message": "This polynomial has only the 'constant' term, so there are no roots."}
     front = strs.pop(0)
     coefs = {} # This dict'll have two properties: exponent and coefficient
     # make a helper function which checks an element of strs for more than 0 or 1 +/- sign

@@ -14,7 +14,7 @@ def is_legal_char(char):
 def laguer(a, x, eps, polish):
     m = len(a) - 1
     zero = complex(0, 0)
-    epss = 1e-30
+    epss = 1e-14
     maxit = 100
     dxold = cmath.polar(x)[0]
     for iter in range(0, maxit):
@@ -29,7 +29,6 @@ def laguer(a, x, eps, polish):
             b = x * b + a[j]
             err = cmath.polar(b)[0] + abx * err
         err *= epss
-        # print(iter, x)
         if (cmath.polar(b)[0] <= err):
             return x
         g = d / b
@@ -69,7 +68,7 @@ def zroots(a, polish):
     # Make a copy of coefficients list, for deflation.
     ad = list(a)
     m = len(a) - 1
-    eps = 1e-30
+    eps = 1e-14
     roots = list()
     for j in range(m):
         new_m = m - j
@@ -82,16 +81,11 @@ def zroots(a, polish):
             b = x * b + c
         ad.pop()
     if polish:
-        # det = 1
-        # tr = 0
         for j in range(m):
             root = laguer(a, roots[j], eps, True)
-            # det *= cmath.polar(root)[0]
-            # tr += root.real
             if abs(root.imag) <= 2 * abs(root.real) * eps:
-                root = complex(x.real, 0)
+                root = complex(root.real, 0)
             roots[j] = root
-    # print("product check: ", det * a[len(a) - 1]/a[0], " and trace check: ", -tr * a[len(a) - 1]/a[len(a) - 2])
     return sorted(roots, key = lambda x: x.real)
 
 # n = 8

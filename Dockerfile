@@ -8,10 +8,10 @@ RUN ["pip", "install", "-r", "requirements.txt"]
 # RUN ["pip", "install", "psycopg2"]
 
 # Setup Flask environment
-ENV FLASK_APP=back
+ENV FLASK_APP=root_finding
 ENV FLASK_ENV=production
 
 EXPOSE 8000
 
 # Run flask environment
-CMD gunicorn back:app
+CMD gunicorn root_finding:app
