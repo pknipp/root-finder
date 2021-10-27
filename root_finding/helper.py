@@ -88,28 +88,6 @@ def zroots(a, polish):
             roots[j] = root
     return sorted(roots, key = lambda x: x.real)
 
-# n = 8
-# a = [ \
-#     (1 + random.randrange(n)) * random.randrange(-1, 3, 2), \
-#     (1 + random.randrange(n)) * random.randrange(-1, 3, 2), \
-#     (1 + random.randrange(n)) * random.randrange(-1, 3, 2), \
-#     (1 + random.randrange(n)) * random.randrange(-1, 3, 2), \
-#     ]
-# print(a)
-# print(zroots(a, True))
-
-# x = 0
-# x = laguer(a, x, 1e-6, False)
-# print("x = ", x)
-# sum = 0
-# pow = 1
-# for coef in a:
-    # sum += coef * pow
-    # pow *= x
-# print("At this point the function equals ", sum)
-
-
-
 general = [ \
     "After '...herokuapp.com' above you should type a slash ('/') followed by your polynomial.", \
     "Input your polynomial according to one of the two formats below: 'array' or 'string'.", \
