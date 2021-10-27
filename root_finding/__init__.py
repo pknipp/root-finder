@@ -13,6 +13,10 @@ app.config.from_object(Config)
 # Application Security
 CORS(app)
 
+top = "<head><title>Root finder</title></head><body>"
+
+bottom = "<span>creator:&nbsp;<a href='https://pknipp.github.io/' target='_blank' rel='noopener noreferrer'>Peter Knipp</a></span></body>"
+
 @app.after_request
 def inject_csrf_token(response):
     response.set_cookie(
@@ -35,7 +39,7 @@ def react_root(path):
 
 @app.route('/')
 def hello():
-    html = "<h3><p align=center>Instructions:</p></h3>"
+    html = top + "<h3><p align=center>Instructions:</p></h3>"
     html += "<div>General:</div><ul>"
     for line in helper.general:
         html += "<li>" + line + "</li>"
@@ -47,8 +51,7 @@ def hello():
     html += "<li>string: UNDER CONSTRUCTION</li><ul>"
     for line in helper.string:
         html += "<li>" + line + "</li>"
-    html += "</ul></ol>"
-    return html
+    return html + "</ul></ol>" + bottom
 
     # return {"instructions": [ \
         # {"general": helper.general}, \
@@ -58,7 +61,7 @@ def hello():
 @app.route('/<str_in>')
 def return_html(str_in):
     str_in = "".join(str_in.split(" ")) # Remove spaces in order to prevent '%20'.
-    return helper.parse_roots(str_in, False)
+    return top + helper.parse_roots(str_in, False) + bottom
 
 @app.route('/json/<str_in>')
 def return_json(str_in):
