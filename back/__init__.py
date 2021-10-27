@@ -3,7 +3,8 @@ from flask import Flask, render_template, request, session, redirect
 from flask_cors import CORS
 from flask_wtf.csrf import CSRFProtect, generate_csrf
 from back.config import Config
-from datetime import datetime
+import json
+import cmath
 from . import helper
 
 app = Flask(__name__)
@@ -38,6 +39,20 @@ def hello():
 
 @app.route('/<str_in>')
 def index(str_in):
+    if str_in[0] == '[':
+        a = list(map(lambda x: float(x), "".join(str_in.split(" "))[1:-1].split(",")))
+        roots = helper.zroots(a, True)
+        print(a)
+        n = 16
+        check_product = 1
+        check_sum = 0
+        for root in roots:
+            check_product *= cmath.polar(root)[0]
+            check_sum += root.real
+        check_product *= (a[len(a) - 1] / a[0])
+        check_sum *= -(a[len(a) - 1] / a[len(a) - 2])
+        roots = list(map(lambda x: str(round(x.real, n)) + (((' + ' if x.imag > 0 else ' - ') + str(abs(x.imag)) + 'j') if x.imag else ''), roots))
+        return {"roots": roots, "check_product": check_product, "check_sum": -check_sum}
     str_in = "".join(str_in.split(" ")) # Remove spaces in order to prevent '%20'.
     str_in = "^".join(str_in.split("**")) # Temporarily replace ** with ^, to allow removal of single *.
     str_in = "^".join(str_in.split("^+")) # '+' is unnecessary in exponent.
@@ -67,7 +82,7 @@ def index(str_in):
     coefs = {} # This dict'll have two properties: exponent and coefficient
     # make a helper function which checks an element of strs for more than 0 or 1 +/- sign
     # if such an excess is detected, split it, and reinsert it assuming exponent of leading term is zero
-    for str in strs:
-        pass
+    # for str in strs:
+        # pass
     return {"variable string": var, "strs": strs}
     # return {"incoming_string": incoming_string}

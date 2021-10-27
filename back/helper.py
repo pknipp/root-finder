@@ -1,4 +1,5 @@
 import cmath
+import random
 
 def is_legal_start(char):
     ascii = ord(char)
@@ -13,7 +14,7 @@ def is_legal_char(char):
 def laguer(a, x, eps, polish):
     m = len(a) - 1
     zero = complex(0, 0)
-    epss = 6e-8
+    epss = 1e-30
     maxit = 100
     dxold = cmath.polar(x)[0]
     for iter in range(0, maxit):
@@ -68,13 +69,11 @@ def zroots(a, polish):
     # Make a copy of coefficients list, for deflation.
     ad = list(a)
     m = len(a) - 1
-    eps = 1e-6
+    eps = 1e-30
     roots = list()
     for j in range(m):
         new_m = m - j
         x = laguer(ad, complex(0, 0), eps, False)
-        if abs(x.imag) <= 2 * abs(x.real) * eps * eps:
-            x = complex(x.real, 0)
         roots.append(x)
         b = ad[new_m]
         for jj in range(new_m - 1, -1, -1):
@@ -82,10 +81,29 @@ def zroots(a, polish):
             ad[jj] = b
             b = x * b + c
         ad.pop()
-    return roots
+    if polish:
+        # det = 1
+        # tr = 0
+        for j in range(m):
+            root = laguer(a, roots[j], eps, True)
+            # det *= cmath.polar(root)[0]
+            # tr += root.real
+            if abs(root.imag) <= 2 * abs(root.real) * eps:
+                root = complex(x.real, 0)
+            roots[j] = root
+    # print("product check: ", det * a[len(a) - 1]/a[0], " and trace check: ", -tr * a[len(a) - 1]/a[len(a) - 2])
+    return sorted(roots, key = lambda x: x.real)
 
-a = [-6, 11, -6, 1]
-print(zroots(a, True))
+# n = 8
+# a = [ \
+#     (1 + random.randrange(n)) * random.randrange(-1, 3, 2), \
+#     (1 + random.randrange(n)) * random.randrange(-1, 3, 2), \
+#     (1 + random.randrange(n)) * random.randrange(-1, 3, 2), \
+#     (1 + random.randrange(n)) * random.randrange(-1, 3, 2), \
+#     ]
+# print(a)
+# print(zroots(a, True))
+
 # x = 0
 # x = laguer(a, x, 1e-6, False)
 # print("x = ", x)
@@ -106,13 +124,16 @@ formats = [ \
     ]}, \
     {"string": [ \
         "Each of the polynomial's coefficients may be represented as an integer or decimal but not as fraction, because '/' has special meaning in a URL.",\
-        "Your variable must be a string which starts with a letter (upper- or lowercase) or underscore and which - if multi-character - otherwise contains only letters, underscores, or digits.",\
+        "Your variable must be a string which starts with a letter (upper- or lowercase) or underscore.", \
+        "If your variable has multiple characters, they may only be letters, underscores, or digits.",\
         "Represent the product of a coefficient and a variable in the usual sequence: coefficient before variable.",    \
         "Represent the multiplication operation either by a '*' or in an implied manner (ie with nothing separating the coefficient and the variable).",\
         "Represent 'x squared' either as 'x**2' (preferably) or 'x^2' (OK) but not as 'x*x'. Do likewise for higher powers.", \
-        "You need not represent the absolute value of a coefficient if it equals 1.  For instance you may type 'x' instead of '1x' or '1*x', or '-x' instead of '-1x' or '-1*x'.",\
+        "You need not represent the absolute value of a coefficient if it equals 1.", \
+        "For instance you may type 'x' instead of '1x' or '1*x', or '-x' instead of '-1x' or '-1*x'.",\
         "You need not type the polynomial's terms in any particular order (such as largest power first or last).",\
-        "You need not include any terms in the polynomial for which the coefficient is zero.  For instance you may write '4x**2-9' instead of '4x**2+0x-9'.",\
+        "You need not include any terms in the polynomial for which the coefficient is zero.", \
+        "For instance you may write '4x**2-9' instead of '4x**2+0x-9'.",\
         "Spaces in your formula are optional, but be forewarned that their use will make the address less easy to read after you hit 'RETURN', because each space will be replaced by '%20'.", \
     ]}   \
 ]
