@@ -80,12 +80,12 @@ def index(str_in):
         sum -= 1
         roots = list(map(lambda x: str(round(x.real, n)) + (((' + ' if x.imag > 0 else ' - ') + str(abs(x.imag)) + 'j') if x.imag else ''), roots))
         html = "<h3><p align=center>Results:</p></h3><ul>"
-        html += "<li>Your polynomial: " + str_in + "</li>"
+        html += "<li>your polynomial: " + str_in + "</li>"
         html += "<li>validity check of roots (All three numbers should be small.): </li><ul>"
         html += "<li>based on product of roots: " + str(product) + " </li>"
         html += "<li>based on sum of roots: " + str(sum) + " </li>"
         html += "<li>based on sum of values of polynomial: " + str(func_mag) + " </li></ul>"
-        html += "<li>Roots (including imaginary parts - if complex):<ul>"
+        html += "<li>roots (including imaginary parts - if complex):<ul>"
         for root in roots:
             html += "<li>" + root + "</li>"
         html += "</ul>"
