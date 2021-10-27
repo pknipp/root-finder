@@ -35,10 +35,25 @@ def react_root(path):
 
 @app.route('/')
 def hello():
-    return {"instructions": [ \
-        {"general": helper.general}, \
-        {"formats": [{"array": helper.array}, {"string": "UNDER CONSTRUCTION"}]} \
-    ]}
+    html = "<h3><p align=center>Instructions:</p></h3>"
+    html += "<div>General:</div><ul>"
+    for line in helper.general:
+        html += "<li>" + line + "</li>"
+    html += "</ul>"
+    html += "<div>Formats:</div><ol><li>array</li><ul>"
+    for line in helper.array:
+        html += "<li>" + line + "</li>"
+    html += "</ul>"
+    html += "<li>string: UNDER CONSTRUCTION</li><ul>"
+    for line in helper.string:
+        html += "<li>" + line + "</li>"
+    html += "</ul></ol>"
+    return html
+
+    # return {"instructions": [ \
+        # {"general": helper.general}, \
+        # {"formats": [{"array": helper.array}, {"string": "UNDER CONSTRUCTION"}]} \
+    # ]}
 
 @app.route('/<str_in>')
 def index(str_in):
@@ -46,7 +61,6 @@ def index(str_in):
     if str_in[0] == '[':
         a = list(map(lambda x: float(x), str_in[1:-1].split(",")))
         roots = helper.zroots(a, True)
-        print(a)
         n = 16
         product = 1
         sum = 0
@@ -65,12 +79,17 @@ def index(str_in):
         sum *= -(a[len(a) - 1] / a[len(a) - 2])
         sum -= 1
         roots = list(map(lambda x: str(round(x.real, n)) + (((' + ' if x.imag > 0 else ' - ') + str(abs(x.imag)) + 'j') if x.imag else ''), roots))
-        return {"summary": [\
-            {"your polynomial": str_in}, \
-            {"validity check of roots (All three numbers should be small.)": \
-                {"by product": product, "by sum": sum, "by sum of function values": func_mag}}, \
-            {"the roots themselves (including real and - if necessary - imaginary parts)": roots}, \
-        ]}
+        html = "<h3><p align=center>Results:</p></h3><ul>"
+        html += "<li>Your polynomial: " + str_in + "</li>"
+        html += "<li>validity check of roots (All three numbers should be small.): </li><ul>"
+        html += "<li>based on product of roots: " + str(product) + " </li>"
+        html += "<li>based on sum of roots: " + str(sum) + " </li>"
+        html += "<li>based on sum of values of polynomial: " + str(func_mag) + " </li></ul>"
+        html += "<li>Roots (including imaginary parts - if complex):<ul>"
+        for root in roots:
+            html += "<li>" + root + "</li>"
+        html += "</ul>"
+        return html
     str_in = "^".join(str_in.split("**")) # Temporarily replace ** with ^, to allow removal of single *.
     str_in = "^".join(str_in.split("^+")) # '+' is unnecessary in exponent.
     str_in = "".join(str_in.split("*")) # Make multiplication implicit rather than explicit.
