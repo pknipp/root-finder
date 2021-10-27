@@ -35,27 +35,42 @@ def react_root(path):
 
 @app.route('/')
 def hello():
-    return {"instructions": [{"general": helper.instructions}, {"formats": helper.formats}]}
+    return {"instructions": [ \
+        {"general": helper.general}, \
+        {"formats": [{"array": helper.array}, {"string": "UNDER CONSTRUCTION"}]} \
+    ]}
 
 @app.route('/<str_in>')
 def index(str_in):
+    str_in = "".join(str_in.split(" ")) # Remove spaces in order to prevent '%20'.
     if str_in[0] == '[':
-        a = list(map(lambda x: float(x), "".join(str_in.split(" "))[1:-1].split(",")))
+        a = list(map(lambda x: float(x), str_in[1:-1].split(",")))
         roots = helper.zroots(a, True)
         print(a)
         n = 16
-        check_product = 1
-        check_sum = 0
+        product = 1
+        sum = 0
+        func_mag = 0
         for root in roots:
-            check_product *= cmath.polar(root)[0]
-            check_sum += root.real
-        check_product *= (a[len(a) - 1] / a[0])
-        check_product -= 1
-        check_sum *= -(a[len(a) - 1] / a[len(a) - 2])
-        check_sum -= 1
+            product *= cmath.polar(root)[0]
+            sum += root.real
+            func = 0
+            pow = 1
+            for coef in a:
+                func += coef * pow
+                pow *= root
+            func_mag += cmath.polar(func)[0]
+        product *= (a[len(a) - 1] / a[0])
+        product -= 1
+        sum *= -(a[len(a) - 1] / a[len(a) - 2])
+        sum -= 1
         roots = list(map(lambda x: str(round(x.real, n)) + (((' + ' if x.imag > 0 else ' - ') + str(abs(x.imag)) + 'j') if x.imag else ''), roots))
-        return {"roots": roots, "check_product": check_product, "check_sum": -check_sum}
-    str_in = "".join(str_in.split(" ")) # Remove spaces in order to prevent '%20'.
+        return {"summary": [\
+            {"your polynomial": str_in}, \
+            {"validity check of roots (All three numbers should be small.)": \
+                {"by product": product, "by sum": sum, "by sum of function values": func_mag}}, \
+            {"the roots themselves (including real and - if necessary - imaginary parts)": roots}, \
+        ]}
     str_in = "^".join(str_in.split("**")) # Temporarily replace ** with ^, to allow removal of single *.
     str_in = "^".join(str_in.split("^+")) # '+' is unnecessary in exponent.
     str_in = "".join(str_in.split("*")) # Make multiplication implicit rather than explicit.
