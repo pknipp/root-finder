@@ -208,7 +208,7 @@ def parse_roots(str_in, json):
     product *= a[len(a) - 1]
     if a[0]:
         product /= a[0] #* (-1) ** len(a)
-        product += 1
+        product -= 1
     sum *= -a[len(a) - 1]
     if a[len(a) - 2]:
         sum /= a[len(a) - 2]
