@@ -107,6 +107,8 @@ def parse_roots(str_in, json):
             return {"error": "Your polynomial seems to be constant, which'll lead to either zero roots or an infinite number thereof."}
         a = list(map(lambda x: float(x), coefs)) # Convert list items from strings to numbers.
     else:                # Polynomial is formatted as a string.
+        if str_in[0] == "+":
+            str_in = str_in[1:] #leading "+" is unnecessary
         str_in = "^".join(str_in.split("**")) # Temporarily replace ** with ^, to allow removal of single *.
         str_in = "^".join(str_in.split("^+")) # '+' is unnecessary in exponent.
         str_in = "".join(str_in.split("*")) # Make multiplication implicit rather than explicit.
@@ -128,15 +130,104 @@ def parse_roots(str_in, json):
         if var is None:
             return {"error": "No legal variable name was found."}
         strs = str_in.split(var)
-        end = strs.pop()
-        # if not len(strs):
-            # return {"message": "This polynomial has only the 'constant' term, so there are no roots."}
-        front = strs.pop(0)
+        # Ensure that any linear term is written as, e.g., 2x**1
+        for i in range(1, len(strs)):
+            if not strs[i][0:2] == "**":
+                strs[i] = "**1" + strs[i]
+        # Ensure that any constant term is written as, e.g., 2x**0
+        # Deal with leading term separately:
+        leading = strs[0][1:]
+        signs = ['+', '-']
+        for sign in signs:
+            if sign in leading:
+                i = leading.index(sign)
+                strs[0] = strs[0][0:i]
+                strs.insert(1, "**0" + strs[0][i:])
+
+        # Now deal with rest of terms in list, except for trailing one.
+        i_str = 1
+        while i_str < len(strs) - 1:
+            string = strs[i_str]
+            i = None
+            ## Seek 1st sign, which MUST exist.
+            for sign in signs:
+                if sign in string:
+                    i = string.index(sign)
+            ## Seek 2nd sign, which MAY exist.
+            for sign in signs:
+                if sign in string[i + 1:]:
+                    i = string.index(sign, i + 1)
+                    strs[i_str] = string[0:i]
+                    strs.insert(i_str + 1, "**0" + strs[i_str][i:])
+            i_str += 1
+
+        # Now deal w/trailing term
+        trailing = strs[len(strs) - 1]
+        if "+" in trailing or "-" in trailing:
+            strs.append("**0")
+
+        i_str = 0
+        while i_str < len(strs):
+            string = strs[i_str]
+            coef = None
+            sign_count = 0
+            for i in range(1, len(string)):
+                if string[i] == '+' or string[i] == '-':
+                    sign_count += 1
+            if sign_count > 1:
+                return {"error": "There is something wrong with this string: " + string}
+            elif sign_count == 1:
+                for sign in ["+", "-"]:
+                    if sign in string:
+                        strings = string.split(sign)
+                        strs[i_str] = strings[0]
+                        strs.insert(i_str + 1, strings[1])
+
+            if "+" in string[1:] or "-" in strs[0][1:]:
+                strs[i_str] = "**0" + string
+                strs.insert(i_str + 1, string.split())
         coefs = {} # This dict'll have two properties: exponent and coefficient
+        leading = strs[0]
+        for i_str in range(len(strs) - 2):
+            coef = None
+            if is_number(leading):
+                coef = float(leading)
+            else:
+                return {"error": "There is a problem with one of your coefficients: " + leading}
+            trailing = strs[i_str + 1]
+            trailings = None
+            is_negative = None
+            if '-' in trailing:
+                trailings = trailing.split("-")
+                is_negative = True
+            else:
+                trailings = trailing.split("+")
+
+
+        # Parse the first string separately.
+        front = strs.pop(0)
+        coef = None
+        if is_number(front):
+            coef = float(front)
+        else:
+            return {"error": "There is a problem with your leading coefficient: " + front}
+        coef = 1
+        if front[0] == "-":
+            coef *= -1
+            front = front[1:]
+        n_char = len(front)
+        i_char = 0
+        if front[i_char] == ".":
+            i_char += 1
+        while i_char < n_char and is_number(front[0: i_char + 1]):
+            coef
+            i_char += 1
+        coefs = {} # This dict'll have two properties: exponent and coefficient
+        end = strs.pop() # Parse this last.
+
         # make a helper function which checks an element of strs for more than 0 or 1 +/- sign
         # if such an excess is detected, split it, and reinsert it assuming exponent of leading term is zero
-        # for str in strs:
-            # pass
+    
         return {"error": "I've not yet finished coding this."}
         return {"variable string": var, "strs": strs}
         # return {"incoming_string": incoming_string}
