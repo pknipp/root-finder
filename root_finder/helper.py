@@ -182,7 +182,6 @@ def parse_roots(str_in, json):
                     exponent = int(exponent_and_coef[0:i])
                     exponent_max = exponent_max if (exponent_max > exponent) else exponent
                     strs[i_str + 1] = exponent_and_coef[i:]
-                    print(i_str, coef, exponent)
                     coefs[exponent] = coef + (0 if not (exponent in coefs) else coefs[exponent])
         exponent = int(strs[len(strs) - 1][2:])
         exponent_max = exponent_max if (exponent_max > exponent) else exponent
@@ -190,6 +189,7 @@ def parse_roots(str_in, json):
         a = [0] * (exponent_max + 1)
         for exponent in coefs:
             a[exponent] = coefs[exponent]
+        print(a)
 
     roots = zroots(a, True)
     n = 16
@@ -207,7 +207,7 @@ def parse_roots(str_in, json):
         func_mag += cmath.polar(func)[0]
     product *= a[len(a) - 1]
     if a[0]:
-        product /= a[0]
+        product /= a[0] * (-1) ** len(a)
         product -= 1
     sum *= -a[len(a) - 1]
     if a[len(a) - 2]:
