@@ -62,7 +62,7 @@ def hello():
 @app.route('/<str_in>')
 def return_html(str_in):
     results = helper.parse_roots(str_in, False)
-    return (top + results + bottom) if isinstance(results, str) else ("<h1>" + results["error"] + "</h1>")
+    return (top + results + bottom) if isinstance(results, str) else results #("<h1>" + results["error"] + "</h1>")
 
 @app.route('/json/<str_in>')
 def return_json(str_in):
