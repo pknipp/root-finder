@@ -88,10 +88,10 @@ def parse_roots(str_in, json):
     str_in = "".join(str_in.split(" ")) # Remove spaces in order to prevent '%20' in address bar.
     a = None # Initialize this in outer scope.
     if str_in[0] == '[': # Polynomial is formatted as an array.
-        str_in = str_in[1:] # removing leading open bracket
-        if not str_in[-1] == ']':
+        str_temp = str_in[1:] # removing leading open bracket
+        if not str_temp[-1] == ']':
             return {"error": "You forgot the closing square bracket."}
-        coefs = str_in[:-1].split(",")
+        coefs = str_temp[:-1].split(",")
         n_coef = len(coefs)
         leading_coef = coefs[n_coef - 1]
         if is_number(leading_coef) and not float(leading_coef):
@@ -166,23 +166,23 @@ def parse_roots(str_in, json):
         if "+" in trailing or "-" in trailing:
             strs.append("**0")
 
-        # return var.join(strs)
-        coefs = {} # This dict'll have two properties: exponent and coefficient
-        coef = None
+        coefs = {} # For this dict: key = exponent and value = coefficient.
+        coef = None #Outer scope is needed, for coefficient of last term.
         exponent_max = 0
-        for i_str in range(len(strs) - 1):
+        for i_str in range(len(strs) - 1): # Loop includes all but last term
             coef = strs[i_str]
-            if coef == "+" or coef == "-" or coef == "":
+            if coef == "+" or coef == "-" or coef == "": # 1 is "understood in these situations"
                 coef += "1"
             coef = float(coef)
-            exponent_and_coef = strs[i_str + 1][2:]
-            for sign in signs:
-                if sign in exponent_and_coef:
-                    i = exponent_and_coef.index(sign)
+            exponent_and_coef = strs[i_str + 1][2:] # concatenation of previous exponent and next coefficient
+            for sign in signs: # '+' and '-'
+                if sign in exponent_and_coef:  # This'll be true for exactly one of the two signs.
+                    i = exponent_and_coef.index(sign) # Find the +/-, which separates exponent and coefficient
                     exponent = int(exponent_and_coef[0:i])
                     exponent_max = exponent_max if (exponent_max > exponent) else exponent
                     strs[i_str + 1] = exponent_and_coef[i:]
                     coefs[exponent] = coef + (0 if not (exponent in coefs) else coefs[exponent])
+        # Last string contains only the exponent, so it must be handled differently.
         exponent = int(strs[len(strs) - 1][2:])
         exponent_max = exponent_max if (exponent_max > exponent) else exponent
         coefs[exponent] = coef + (0 if not (exponent in coefs) else coefs[exponent])
@@ -207,8 +207,8 @@ def parse_roots(str_in, json):
         func_mag += cmath.polar(func)[0]
     product *= a[len(a) - 1]
     if a[0]:
-        product /= a[0] * (-1) ** len(a)
-        product -= 1
+        product /= a[0] #* (-1) ** len(a)
+        product += 1
     sum *= -a[len(a) - 1]
     if a[len(a) - 2]:
         sum /= a[len(a) - 2]

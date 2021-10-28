@@ -1,31 +1,10 @@
-- valid in url: letters (UPPER and lower), 0-9, -.*)(+ (latter is "reserved" but works in Chrome & Safari)
-- parse the string, as follows:
-    - Now string_tot = str/var/str/var/str/etc
-    - parse the str after each var, which should begin with "**" & be immediately followed by the digit 0-9, which should itself be immediately followed by any digit 0-9, until reaching a non-digit character.
-    - If the stuff preceding the first (ANY?) string contains a non-leading "+" or "-":
-        split this on that sign (and put that sign on 2nd element), in which case
-        string_tot = const_str/var/^0/str/var/str/var/str/etc
-         preceding first string can be either "" (1), "-" (-1), or any (complex?)number.  NOTE THAT THE FIRST STRING MAY CONTAIN THE CONSTANT TERM, which is indicated if it contains a non-leading "+" or "-"
-    - now string_tot = #/var/str/var/str/etc
-
-    - now total string is of the form #/var/^/int/str/var/^/int/str/var/etc
-    - if the leading char of str is "/" followed by a positive number followed by "+" or "-", interpret this as the inverse of the coefficient for the preceding term.  (Do not allow more than one "/"?).
-    - Now total string is of the form #/var/^/int/str/var/^/int/str/etc
-    - if the leading char of string is "+" or "-" followed by either "" (= 1) or a positive number, interpret this as something which should multiply the coefficient of the following term.
-    - Now total string is of the form #/var/^/int/#/var/^/int/str/etc, ie completely parsed into a form which can be used to load a COEFS array.
-    - HOW TO FIND THE VAR^0 TERM IN THE POLYNOMIAL? (replace this by var^0)
-    - Return an error message if parsing is unsuccessful.
-- import cmath, to allow complex arithmetic
-- Use Laguerre's method for finding roots (found on p. 263 of Numerical Recipes), as follows:
-    COEFS2 = [...COEFS]
-    roots = [(0, 0), (0, 0), ...]
-    loop over COEFS:
-        use COEFS2, starting from particular element of roots, to iterate to a particular root (root0), without polishing
-        use root0 to overwrite particular root in roots list
-        overwrite COEFS2 by deflating COEFS2 with (z - root0)
-    loop over COEFS (again):
-        same as above, but (1) use COEFS instead of COEFS2, (2) do polish, and (3) don't deflate
-- Present results in 2 - 3 ways:
-    - roots sorted in order of increasing order of abs value of real part (which means that complex roots will appear in adjacent cc pairs)
+- decide what looks better in browser: single- or double quotes
+- Import numpy, if that helps to polish properly
+- Fix divide-by-zero problem which happens when some interior coefficients vanish
+- Figure out how to have a favicon, presumably with an absolute path.
+- Determine why my browser renders json differently, depending upon whether it's served by heroku or localhost.
+- Present polynomial in both array- and string-form (but more pretty), regardless of how input (but do differently in json or html)
+- Presentation of results:
+    - combine CC pairs, using "+/-" sign
     - (completely) factored form, ie in terms of binomials, some of which may contain complex numbers
     - IF original polynomial had real coefficients and if there are some CC pairs, "maximally" factorize the polynomial, ie including some irreduciable quadratic factors.

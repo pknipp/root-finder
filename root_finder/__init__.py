@@ -49,7 +49,7 @@ def hello():
     for line in helper.array:
         html += "<li>" + line + "</li>"
     html += "</ul>"
-    html += "<li>string: UNDER CONSTRUCTION</li><ul>"
+    html += "<li>string:</li><ul>"
     for line in helper.string:
         html += "<li>" + line + "</li>"
     return html + "</ul></ol>" + bottom
