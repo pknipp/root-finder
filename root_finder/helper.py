@@ -87,6 +87,7 @@ def zroots(a, polish):
 def parse_roots(str_in, json):
     str_in = "".join(str_in.split(" ")) # Remove spaces in order to prevent '%20' in address bar.
     a = None # Initialize this in outer scope.
+    var = "x" # This'll get overwritten if user inputs polynomial as a string, rather than as an array.
     if str_in[0] == '[': # Polynomial is formatted as an array.
         str_temp = str_in[1:] # removing leading open bracket
         if not str_temp[-1] == ']':
@@ -189,7 +190,7 @@ def parse_roots(str_in, json):
         a = [0] * (exponent_max + 1)
         for exponent in coefs:
             a[exponent] = coefs[exponent]
-        print(a)
+        # print(a)
 
     roots = zroots(a, True)
     n = 16
@@ -215,7 +216,8 @@ def parse_roots(str_in, json):
         sum -= 1
     roots = list(map(lambda x: str(round(x.real, n)) + (((' + ' if x.imag > 0 else ' - ') + str(abs(x.imag)) + 'j') if x.imag else ''), roots))
     heading = "Results"
-    your_poly = "your polynomial: " + str_in
+    your_poly = "your polynomial: "# + str_in
+    formats = ["standard form: ", "array form: " + "[" + ", ".join(list(map(lambda coef: str(coef), a))) + "]"]
     validity = "validity check of roots (All three numbers should be small.)"
     checks = [ \
         "based on product of roots: " + str(product), \
@@ -224,11 +226,13 @@ def parse_roots(str_in, json):
             ]
     root_str = "roots (including imaginary parts, if complex):"
     if json:
-        return {heading: [your_poly, {validity: checks}, {root_str: roots}]}
+        return {heading: [{your_poly: formats}, {validity: checks}, {root_str: roots}]}
     else:
         html = "<p align=center>" + heading + "</p>"
-        html += "<ul><li>" + your_poly + "</li>"
-        html += "<li>" + validity + "</li><ul>"
+        html += "<ul><li>" + your_poly + "</li><ul>"
+        for format in formats:
+            html += "<li>" + format + "</li>"
+        html += "</ul><li>" + validity + "</li><ul>"
         for check in checks:
             html += "<li>" + check + "</li>"
         html += "</ul><li>" + root_str + "</li><ul>"
