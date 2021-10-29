@@ -18,6 +18,7 @@ def is_legal_char(char):
     ascii = ord(char)
     return (ascii > 47 and ascii < 58)
 
+# Translated from fortran version in "Numerical Recipes" book.
 def laguer(a, x, eps, polish):
     m = len(a) - 1
     zero = complex(0.0, 0.0)
@@ -60,6 +61,7 @@ def laguer(a, x, eps, polish):
                 return x
     return "too many iterations"
 
+# Translated from Fortran version in "Numerical Recipes" book.
 def zroots(a, polish):
     # Make a copy of coefficients list, for deflation.
     ad = list(a)
@@ -92,13 +94,13 @@ def parse_roots(str_in, json):
         str_temp = str_in[1:] # removing leading open bracket
         if not str_temp[-1] == ']':
             return {"error": "You forgot the closing square bracket."}
-        coefs = str_temp[:-1].split(",")
+        coefs = str_temp[:-1].split(",") # remove trailing close-bracket, and then convert to list
         n_coef = len(coefs)
         leading_coef = coefs[n_coef - 1]
         if is_number(leading_coef) and not float(leading_coef):
             coefs.pop() # Trim the array if the highest coefficient vanishes, to avoid divide-by-zero error.
             n_coef -= 1
-        not_a_number = 0
+        not_a_number = 0 # Tabulate these problems with user input.
         for coef in coefs:
             if not is_number(coef):
                 not_a_number += 1
@@ -116,7 +118,7 @@ def parse_roots(str_in, json):
         str_in = "**".join(str_in.split("^")) # Replace '^' by '**', to prevent instances of '%5E'.
         if "**-" in str_in:
             return {"error": "A polynomial does not contain negative powers."}
-        var = None
+        var = None # Now search the string for the variable.
         found_var = False
         for char in str_in:
             if not found_var:
@@ -168,11 +170,11 @@ def parse_roots(str_in, json):
             strs.append("**0")
 
         coefs = {} # For this dict: key = exponent and value = coefficient.
-        coef = None #Outer scope is needed, for coefficient of last term.
-        exponent_max = 0
+        coef = None # Outer scope is needed, for coefficient of last term.
+        exponent_max = 0 # We'll search for this value, which'll facilitate creating an array of coefficients.
         for i_str in range(len(strs) - 1): # Loop includes all but last term
             coef = strs[i_str]
-            if coef == "+" or coef == "-" or coef == "": # 1 is "understood in these situations"
+            if coef == "+" or coef == "-" or coef == "": # the value 1 is "understood" in these situations
                 coef += "1"
             coef = float(coef)
             exponent_and_coef = strs[i_str + 1][2:] # concatenation of previous exponent and next coefficient
@@ -182,25 +184,25 @@ def parse_roots(str_in, json):
                     exponent = int(exponent_and_coef[0:i])
                     exponent_max = exponent_max if (exponent_max > exponent) else exponent
                     strs[i_str + 1] = exponent_and_coef[i:]
+                    # Consolidate any terms which may have the same exponent.
                     coefs[exponent] = coef + (0 if not (exponent in coefs) else coefs[exponent])
         # Last string contains only the exponent, so it must be handled differently.
         exponent = int(strs[len(strs) - 1][2:])
         exponent_max = exponent_max if (exponent_max > exponent) else exponent
         coefs[exponent] = coef + (0 if not (exponent in coefs) else coefs[exponent])
-        a = [0] * (exponent_max + 1)
+        a = [0] * (exponent_max + 1) # This array will include any coefficients which are zero.
         for exponent in coefs:
             a[exponent] = coefs[exponent]
-        # print(a)
 
     roots = zroots(a, True)
     n = 16
-    product = 1
-    sum = 0
+    product = complex(1, 0)
+    sum = complex(0, 0)
     sum_imag = 0
     func_mag = 0
     for root in roots:
-        product *= cmath.polar(root)[0]
-        sum += root.real
+        product *= root
+        sum += root
         sum_imag += root.imag
         func = 0
         pow = 1
@@ -210,8 +212,8 @@ def parse_roots(str_in, json):
         func_mag += cmath.polar(func)[0]
     product *= a[len(a) - 1]
     if a[0]:
-        product /= a[0] #* (-1) ** len(a)
-        product -= 1
+        product /= (a[0] * (-1) ** len(a))
+        product += 1
     sum *= -a[len(a) - 1]
     if a[len(a) - 2]:
         sum /= a[len(a) - 2]
