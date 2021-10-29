@@ -2,7 +2,6 @@
 - Import numpy, if that helps to polish properly
 - Figure out how to have a favicon, presumably with an absolute path.
 - Determine why my browser renders json differently, depending upon whether it's served by heroku or localhost.
-- Present polynomial in both array- and string-form (but more pretty), regardless of how input (but do differently in json or html)
 - Presentation of results:
     - combine CC pairs, using "+/-" sign
     - (completely) factored form, ie in terms of binomials, some of which may contain complex numbers

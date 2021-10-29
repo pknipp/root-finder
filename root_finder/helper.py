@@ -196,10 +196,12 @@ def parse_roots(str_in, json):
     n = 16
     product = 1
     sum = 0
+    sum_imag = 0
     func_mag = 0
     for root in roots:
         product *= cmath.polar(root)[0]
         sum += root.real
+        sum_imag += root.imag
         func = 0
         pow = 1
         for coef in a:
@@ -222,21 +224,22 @@ def parse_roots(str_in, json):
             coefs.append([i, a[i]])
 
     your_poly = "your polynomial: "# + str_in
-    formats = ["standard form: ", "array form: " + "[" + ", ".join(list(map(lambda coef: str(coef), a))) + "]"]
-    validity = "validity check of roots (All three numbers should be small.)"
+    formats = ["standard form: ", "array form: " + "[" + ", ".join(list(map(lambda coef: str(int(coef) if int(coef) == coef else coef), a))) + "]"]
+    validity = "validity check of roots (All four numbers should be small.)"
     checks = [ \
         "based on product of roots: " + str(product), \
         "based on sum of roots: " + str(sum), \
-        "based on sum of values of polynomial: " + str(func_mag), \
+        "sum of values of polynomial: " + str(func_mag), \
+        "sum of root's imaginary parts: " + str(sum_imag), \
             ]
     root_str = "roots (including imaginary parts, if complex):"
 
-    # Construct string which represents polynomial in standard form.        
+    # Construct string which represents polynomial in standard form.
     standard_form = ''
     started_string = False
     for pair in coefs:
         if not pair[0]:
-            standard_form += str(pair[1])
+            standard_form += str(int(pair[1]) if int(pair[1]) == pair[1] else pair[1])
         else:
             if started_string:
                 if pair[1] > 0:
@@ -244,9 +247,9 @@ def parse_roots(str_in, json):
             if abs(pair[1]) == 1:
                 standard_form += (' -' if pair[1] < 0 else '')
             else:
-                standard_form += ' ' + str(pair[1])
+                standard_form += ' ' + str(int(pair[1]) if int(pair[1]) == pair[1] else pair[1])
             if pair[0]:
-                standard_form += ' ' + var
+                standard_form += var
             if pair[0] > 1:
                 standard_form +=  (("**" + str(pair[0]) if json else ("<sup>" + str(pair[0]) + "</sup>")))
         started_string = True
