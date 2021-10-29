@@ -216,8 +216,31 @@ def parse_roots(str_in, json):
         sum -= 1
     roots = list(map(lambda x: str(round(x.real, n)) + (((' + ' if x.imag > 0 else ' - ') + str(abs(x.imag)) + 'j') if x.imag else ''), roots))
     heading = "Results"
+    coefs = []
+    for i in range(len(a)):
+        if a[i]:
+            coefs.append([i, a[i]])
+    standard_form = ''
+    started_string = False
+    for pair in coefs:
+        if not pair[0]:
+            standard_form += str(pair[1])
+        else:
+            if started_string:
+                if pair[1] > 0:
+                    standard_form += ' +'
+            if abs(pair[1]) == 1:
+                standard_form += (' -' if pair[1] < 0 else '')
+            else:
+                standard_form += ' ' + str(pair[1])
+            if pair[0]:
+                standard_form += ' ' + var
+            if pair[0] > 1:
+                standard_form +=  ("**" + str(pair[0]))
+        started_string = True
+
     your_poly = "your polynomial: "# + str_in
-    formats = ["standard form: ", "array form: " + "[" + ", ".join(list(map(lambda coef: str(coef), a))) + "]"]
+    formats = ["standard form: " + standard_form, "array form: " + "[" + ", ".join(list(map(lambda coef: str(coef), a))) + "]"]
     validity = "validity check of roots (All three numbers should be small.)"
     checks = [ \
         "based on product of roots: " + str(product), \
