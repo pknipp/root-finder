@@ -220,6 +220,18 @@ def parse_roots(str_in, json):
     for i in range(len(a)):
         if a[i]:
             coefs.append([i, a[i]])
+
+    your_poly = "your polynomial: "# + str_in
+    formats = ["standard form: ", "array form: " + "[" + ", ".join(list(map(lambda coef: str(coef), a))) + "]"]
+    validity = "validity check of roots (All three numbers should be small.)"
+    checks = [ \
+        "based on product of roots: " + str(product), \
+        "based on sum of roots: " + str(sum), \
+        "based on sum of values of polynomial: " + str(func_mag), \
+            ]
+    root_str = "roots (including imaginary parts, if complex):"
+
+    # Construct string which represents polynomial in standard form.        
     standard_form = ''
     started_string = False
     for pair in coefs:
@@ -236,18 +248,10 @@ def parse_roots(str_in, json):
             if pair[0]:
                 standard_form += ' ' + var
             if pair[0] > 1:
-                standard_form +=  ("**" + str(pair[0]))
+                standard_form +=  (("**" + str(pair[0]) if json else ("<sup>" + str(pair[0]) + "</sup>")))
         started_string = True
+    formats[0] += standard_form
 
-    your_poly = "your polynomial: "# + str_in
-    formats = ["standard form: " + standard_form, "array form: " + "[" + ", ".join(list(map(lambda coef: str(coef), a))) + "]"]
-    validity = "validity check of roots (All three numbers should be small.)"
-    checks = [ \
-        "based on product of roots: " + str(product), \
-        "based on sum of roots: " + str(sum), \
-        "based on sum of values of polynomial: " + str(func_mag), \
-            ]
-    root_str = "roots (including imaginary parts, if complex):"
     if json:
         return {heading: [{your_poly: formats}, {validity: checks}, {root_str: roots}]}
     else:
