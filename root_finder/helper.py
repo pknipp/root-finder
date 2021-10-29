@@ -20,7 +20,7 @@ def is_legal_char(char):
 
 def laguer(a, x, eps, polish):
     m = len(a) - 1
-    zero = complex(0, 0)
+    zero = complex(0.0, 0.0)
     epss = 1e-14
     maxit = 100
     dxold = cmath.polar(x)[0]
@@ -68,7 +68,7 @@ def zroots(a, polish):
     roots = list()
     for j in range(m):
         new_m = m - j
-        x = laguer(ad, complex(0, 0), eps, False)
+        x = laguer(ad, complex(.001, .002), eps, False) #Start nonzero, to avoid certain divide-by-zero errors.
         roots.append(x)
         b = ad[new_m]
         for jj in range(new_m - 1, -1, -1):
