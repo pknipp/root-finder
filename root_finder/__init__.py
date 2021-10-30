@@ -1,11 +1,6 @@
-import os, json, cmath
+import os, cmath
 from flask import Flask
-# , render_template, request, session, redirect
-# from flask_cors import CORS
-# from flask_wtf.csrf import CSRFProtect, generate_csrf
 from root_finder.config import Config
-# import json
-# import cmath
 from . import helper
 
 app = Flask(__name__)
