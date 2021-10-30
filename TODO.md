@@ -1,6 +1,3 @@
-- decide what looks better in browser: single- or double quotes
 - Import numpy, if that helps to polish properly
 - Figure out how to have a favicon, presumably with an absolute path.
-- Presentation of results:
-    - (completely) factored form, ie in terms of binomials, some of which may contain complex numbers
-    - IF original polynomial had real coefficients and if there are some CC pairs, "maximally" factorize the polynomial, ie including some irreduciable quadratic factors.
+- Give user the option of sorting by root's real part, imaginary part, modulus, or phase.

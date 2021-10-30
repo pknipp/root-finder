@@ -197,6 +197,8 @@ def parse_roots(str_in, json):
             a[exponent] = coefs[exponent]
 
     roots = zroots(a, True)
+    if not json:
+        var = "<i>" + var + "</i>"
     n = 16
     # The product of the roots should equal the 0th coefficient divided by the last (times +/- 1)
     product = complex(1, 0)
@@ -244,15 +246,15 @@ def parse_roots(str_in, json):
             ]
     root_str = "ROOTS (Complex ones occur in conjugate pairs.)"
     roots = list(filter(lambda root: root.imag >= 0, roots))
-    for root in roots:
+    for i in range(len(roots)):
+        root = roots[i]
         factor = var
         if root.imag:
-            factor += '<sup>2</sup> ' + (' - ' if root.real > 0 else ' + ') + str(2 * root.real) + var + ' + ' + str(cmath.polar(root)[0] ** 2)
+            factor += '<sup>2</sup> ' + (' - ' if root.real > 0 else ' + ') + str(2 * abs(root.real)) + var + ' + ' + str(cmath.polar(root)[0] ** 2)
         else:
             factor += (" - " if root.real > 0 else ' + ') + str(abs(root.real))
-        root = {"real": str(my_int(root.real)), "imaginary": str(my_int(root.imag)), "modulus": str(cmath.polar(root)[0]), "factor": factor}
-        print("Is root an instance of a dict:", isinstance(root, dict))
-        print("root = ", root)
+        polar = cmath.polar(root)
+        roots[i] = {"real": str(my_int(root.real)), "imaginary": str(my_int(root.imag)), "modulus": str(polar[0]), "phase": str(my_int(polar[1])), "factor": factor}
 
     # Construct string which represents polynomial in standard form.
     standard_form = ''
@@ -287,10 +289,9 @@ def parse_roots(str_in, json):
         html += "</table><br><li>" + validity + table_heading1 + '<th>type</th>' + table_heading2 + '</tr></thead><tbody>'
         for check in checks:
             html += "<tr><td>" + check["type"] + "</td><td style=text-align:center>" + check["real"] + "</td><td style=text-align:center>" + check["imaginary"] + "</td><td style=text-align:center>" + check["modulus"] + "</td></tr>"
-        html += "</table><br><li>" + root_str + table_heading1 + table_heading2 + "<th>irreducible factor</th></tr></tr><tbody>"
+        html += "</table><br><li>" + root_str + table_heading1 + table_heading2 + "</th><th>phase</th><th>irreducible factor</th></tr></tr><tbody>"
         for root in roots:
-            print("root = ", root)
-            html += "<tr><td style=text-align:center>" + root["real"] + "</td><td style=text-align:center>" + root["imaginary"] + "</td><td>" + root["modulus"] + "</td><td>" + root["factor"] + "</td></tr>"
+            html += "<tr><td style=text-align:center>" + root["real"] + "</td><td style=text-align:center>" + root["imaginary"] + "</td><td>" + root["modulus"] + "</td><td style=text-align:center >" + root["phase"] + "</td><td style=text-align:center>" + root["factor"] + "</td></tr>"
         return html + "</tbody></table></ul>"
 
 general = [ \
