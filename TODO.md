@@ -1,8 +1,6 @@
 - decide what looks better in browser: single- or double quotes
 - Import numpy, if that helps to polish properly
 - Figure out how to have a favicon, presumably with an absolute path.
-- Determine why my browser renders json differently, depending upon whether it's served by heroku or localhost.
 - Presentation of results:
-    - combine CC pairs, using "+/-" sign
     - (completely) factored form, ie in terms of binomials, some of which may contain complex numbers
     - IF original polynomial had real coefficients and if there are some CC pairs, "maximally" factorize the polynomial, ie including some irreduciable quadratic factors.
