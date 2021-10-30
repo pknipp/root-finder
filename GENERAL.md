@@ -1,6 +1,5 @@
 Other math libraries to create:
 (possibly)short:
-    polynomial root-finding
     non-polynomial root-finding
     linear algebra:
         matrix inversion

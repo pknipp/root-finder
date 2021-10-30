@@ -6,22 +6,10 @@ from . import helper
 app = Flask(__name__)
 app.config.from_object(Config)
 
-# Application Security
-# CORS(app)
 
+# The following are used to wrap the html string created for server-side rendering.
 top = "<head><title>Root finder</title></head><body>"
-
 bottom = "<span>creator:&nbsp;<a href='https://pknipp.github.io/' target='_blank' rel='noopener noreferrer'>Peter Knipp</a></span></body>"
-
-# @app.after_request
-# def inject_csrf_token(response):
-#     response.set_cookie(
-#         'csrf_token',
-#         generate_csrf(),
-#         secure=True if os.environ.get('FLASK_ENV') else False,
-#         samesite='Strict' if os.environ.get('FLASK_ENV') else None,
-#         httponly=True)
-#     return response
 
 
 @app.route('/', defaults={'path': ''})
@@ -37,27 +25,25 @@ def react_root(path):
 def hello():
     html = top + "<h3><p align=center>Instructions:</p></h3>"
     html += "<div>General:</div><ul>"
-    for line in helper.general:
-        html += "<li>" + line + "</li>"
+    for instruction in helper.general:
+        html += "<li>" + instruction + "</li>"
     html += "</ul>"
     html += "<div>Formats:</div><ol><li>array</li><ul>"
-    for line in helper.array:
-        html += "<li>" + line + "</li>"
+    for formatting_instruction in helper.array:
+        html += "<li>" + formatting_instruction + "</li>"
     html += "</ul>"
     html += "<li>string:</li><ul>"
-    for line in helper.string:
-        html += "<li>" + line + "</li>"
+    for formatting_instruction in helper.string:
+        html += "<li>" + formatting_instruction + "</li>"
     return html + "</ul></ol>" + bottom
-
-    # return {"instructions": [ \
-        # {"general": helper.general}, \
-        # {"formats": [{"array": helper.array}, {"string": "UNDER CONSTRUCTION"}]} \
-    # ]}
 
 @app.route('/<str_in>')
 def return_html(str_in):
     results = helper.parse_roots(str_in, False)
-    return (top + results + bottom) if isinstance(results, str) else results #("<h1>" + results["error"] + "</h1>")
+    if isinstance(results, str):
+        return top + results + bottom
+    else:
+        return '<h1>' + results["error"] + '</h1>'
 
 @app.route('/json/<str_in>')
 def return_json(str_in):

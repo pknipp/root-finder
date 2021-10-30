@@ -90,7 +90,7 @@ def zroots(a, polish):
 
 def parse_roots(str_in, json):
     str_in = "".join(str_in.split(" ")) # Remove spaces in order to prevent '%20' in address bar.
-    a = None # Initialize this in outer scope.
+    a = None # Initialize the coefficient array in outer scope.
     var = "x" # This'll get overwritten if user inputs polynomial as a string, rather than as an array.
     if str_in[0] == '[': # Polynomial is formatted as an array.
         str_temp = str_in[1:] # removing leading open bracket
@@ -112,6 +112,8 @@ def parse_roots(str_in, json):
             return {"error": "Your polynomial seems to be constant, which'll lead to either zero roots or an infinite number thereof."}
         a = list(map(lambda x: float(x), coefs)) # Convert list items from strings to numbers.
     else: # Polynomial is formatted as a string.
+        if str_in == 'json':
+            return {"error": "You need to enter a polynomial."}
         if str_in[0] == "+":
             str_in = str_in[1:] #leading "+" is unnecessary
         str_in = "^".join(str_in.split("**")) # Temporarily replace ** with ^, to allow removal of single *.
@@ -158,6 +160,8 @@ def parse_roots(str_in, json):
             for sign in signs:
                 if sign in string:
                     i = string.index(sign)
+            if i == None:
+                return {"error": "There is a problem with this string: " + string}
             ## Seek 2nd sign, which MAY exist.
             for sign in signs:
                 if sign in string[i + 1:]:
@@ -178,7 +182,10 @@ def parse_roots(str_in, json):
             coef = strs[i_str]
             if coef == "+" or coef == "-" or coef == "": # the value 1 is "understood" in these situations
                 coef += "1"
-            coef = float(coef)
+            if is_number(coef):
+                coef = float(coef)
+            else:
+                return {"error": "'" + coef + "'" + " is not a number."}
             exponent_and_coef = strs[i_str + 1][2:] # concatenation of previous exponent and next coefficient
             for sign in signs: # '+' and '-'
                 if sign in exponent_and_coef:  # This'll be true for exactly one of the two signs.
@@ -200,6 +207,7 @@ def parse_roots(str_in, json):
     if not json:
         var = "<i>" + var + "</i>"
     n = 16
+    # What follows are the initializations of 4 variables used for checking the validity of the roots.
     # The product of the roots should equal the 0th coefficient divided by the last (times +/- 1)
     product = complex(1, 0)
     # The sum of the roots should equal the 2nd-to-last coefficient (times -1)
@@ -231,6 +239,8 @@ def parse_roots(str_in, json):
     for i in range(len(a)):
         if a[i]:
             coefs.append([i, a[i]])
+    if len(coefs) == 1:
+            return {"error": "You only entered one term.  That's not really a 'poly'-nomial."}
 
     your_poly = "POLYNOMIAL"
     formats = [
@@ -250,11 +260,11 @@ def parse_roots(str_in, json):
         root = roots[i]
         factor = var
         if root.imag:
-            factor += '<sup>2</sup> ' + (' - ' if root.real > 0 else ' + ') + str(2 * abs(root.real)) + var + ' + ' + str(cmath.polar(root)[0] ** 2)
+            factor += '<sup>2</sup> ' + (' - ' if root.real > 0 else ' + ') + str(my_int(2 * abs(root.real))) + var + ' + ' + str(my_int(cmath.polar(root)[0] ** 2))
         else:
-            factor += (" - " if root.real > 0 else ' + ') + str(abs(root.real))
+            factor += '' if not root.real else (" - " if root.real > 0 else ' + ') + str(my_int(abs(root.real)))
         polar = cmath.polar(root)
-        roots[i] = {"real": str(my_int(root.real)), "imaginary": str(my_int(root.imag)), "modulus": str(polar[0]), "phase": str(my_int(polar[1])), "factor": factor}
+        roots[i] = {"real": str(my_int(root.real)), "imaginary": str(my_int(root.imag)), "modulus": str(my_int(polar[0])), "phase": str(my_int(polar[1])), "factor": factor}
 
     # Construct string which represents polynomial in standard form.
     standard_form = ''
@@ -291,7 +301,7 @@ def parse_roots(str_in, json):
             html += "<tr><td>" + check["type"] + "</td><td style=text-align:center>" + check["real"] + "</td><td style=text-align:center>" + check["imaginary"] + "</td><td style=text-align:center>" + check["modulus"] + "</td></tr>"
         html += "</table><br><li>" + root_str + table_heading1 + table_heading2 + "</th><th>phase</th><th>irreducible factor</th></tr></tr><tbody>"
         for root in roots:
-            html += "<tr><td style=text-align:center>" + root["real"] + "</td><td style=text-align:center>" + root["imaginary"] + "</td><td>" + root["modulus"] + "</td><td style=text-align:center >" + root["phase"] + "</td><td style=text-align:center>" + root["factor"] + "</td></tr>"
+            html += "<tr><td style=text-align:center>" + root["real"] + "</td><td style=text-align:center>" + root["imaginary"] + "</td><td style=text-align:center>" + root["modulus"] + "</td><td style=text-align:center >" + root["phase"] + "</td><td style=text-align:center>" + root["factor"] + "</td></tr>"
         return html + "</tbody></table></ul>"
 
 general = [ \
