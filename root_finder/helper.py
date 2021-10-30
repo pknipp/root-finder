@@ -1,5 +1,8 @@
 import cmath
 
+def my_int(x):
+    return int(x) if int(x) == x else x
+
 def is_number(string):
     try:
         float(string)
@@ -108,7 +111,7 @@ def parse_roots(str_in, json):
         if n_coef == 1:
             return {"error": "Your polynomial seems to be constant, which'll lead to either zero roots or an infinite number thereof."}
         a = list(map(lambda x: float(x), coefs)) # Convert list items from strings to numbers.
-    else:                # Polynomial is formatted as a string.
+    else: # Polynomial is formatted as a string.
         if str_in[0] == "+":
             str_in = str_in[1:] #leading "+" is unnecessary
         str_in = "^".join(str_in.split("**")) # Temporarily replace ** with ^, to allow removal of single *.
@@ -217,30 +220,35 @@ def parse_roots(str_in, json):
     if a[len(a) - 2]:
         sum /= a[len(a) - 2]
         sum -= 1
-    roots = list(map(lambda x: str(round(x.real, n)) + (((' + ' if x.imag > 0 else ' - ') + str(abs(x.imag)) + 'j') if x.imag else ''), roots))
-    heading = "Results"
+    # roots = list(map(lambda x: str(round(x.real, n)) + (((' + ' if x.imag > 0 else ' - ') + str(abs(x.imag)) + 'j') if x.imag else ''), roots))
+    heading = "RESULTS"
     coefs = []
     for i in range(len(a)):
         if a[i]:
             coefs.append([i, a[i]])
 
-    your_poly = "your polynomial: "# + str_in
-    formats = ["standard form: ", "array form: " + "[" + ", ".join(list(map(lambda coef: str(int(coef) if int(coef) == coef else coef), a))) + "]"]
-    validity = "validity check of roots (All four numbers should be small.)"
+    your_poly = "POLYNOMIAL"
+    formats = [
+        {"type": '"standard" form', "string": ''}, \
+        {"type": '"array" form', "string": "[" + ", ".join(list(map(lambda coef: str(my_int(coef)), a))) + "]"}, \
+    ]
+    validity = "VALIDITY check of roots (All numbers should be small.)"
     checks = [ \
-        "based on product of roots: " + str(product), \
-        "based on sum of roots: " + str(sum), \
-        "sum of values of polynomial: " + str(func_mag), \
-        "sum of root's imaginary parts: " + str(sum_imag), \
+        {"type" : "based on product of roots", "real": str(my_int(product.real)), "imaginary": str(my_int(product.imag)), "modulus": str(my_int(cmath.polar(product)[0]))}, \
+        {"type": "based on sum of roots", "real": str(my_int(sum.real)), "imaginary": str(my_int(sum.imag)), "modulus": str(my_int(cmath.polar(sum)[0]))}, \
+        {"type": "sum of moduli of polynomial", "real": str(my_int(func_mag.real)), "imaginary": "NA", "modulus": str(my_int(cmath.polar(func_mag)[0]))}, \
+        {"type": "sum of root's imaginary parts", "real": "NA", "imaginary": str(my_int(sum_imag)), "modulus": str(my_int(abs(sum_imag)))}, \
             ]
-    root_str = "roots (including imaginary parts, if complex):"
+    root_str = "ROOTS (Complex ones occur in conjugate pairs.)"
+    roots = list(filter(lambda root: root.imag >= 0, roots))
+    roots = list(map(lambda root: {"real": str(my_int(root.real)), "imaginary": str(my_int(root.imag)), "modulus": str(cmath.polar(root)[0])}, roots))
 
     # Construct string which represents polynomial in standard form.
     standard_form = ''
     started_string = False
     for pair in coefs:
         if not pair[0]:
-            standard_form += str(int(pair[1]) if int(pair[1]) == pair[1] else pair[1])
+            standard_form += str(my_int(pair[1]))
         else:
             if started_string:
                 if pair[1] > 0:
@@ -248,28 +256,30 @@ def parse_roots(str_in, json):
             if abs(pair[1]) == 1:
                 standard_form += (' -' if pair[1] < 0 else '')
             else:
-                standard_form += ' ' + str(int(pair[1]) if int(pair[1]) == pair[1] else pair[1])
+                standard_form += ' ' + str(my_int(pair[1]))
             if pair[0]:
                 standard_form += var
             if pair[0] > 1:
-                standard_form +=  (("**" + str(pair[0]) if json else ("<sup>" + str(pair[0]) + "</sup>")))
+                standard_form +=  (("**" + str(my_int(pair[0])) if json else ("<sup>" + str(my_int(pair[0])) + "</sup>")))
         started_string = True
-    formats[0] += standard_form
+    formats[0]["string"] = standard_form
 
+    table_heading1 = "<table border='1'><thead><tr>"
+    table_heading2 = '<th>real part</th><th>imaginary part</th><th>modulus</th></tr></thead><tbody>'
     if json:
         return {heading: [{your_poly: formats}, {validity: checks}, {root_str: roots}]}
     else:
         html = "<p align=center>" + heading + "</p>"
-        html += "<ul><li>" + your_poly + "</li><ul>"
+        html += "<ul><li>" + your_poly + "</li><table border='1'><tbody>"
         for format in formats:
-            html += "<li>" + format + "</li>"
-        html += "</ul><li>" + validity + "</li><ul>"
+            html += "<td>" + format["type"] + "</td><td>" + format["string"] + "</td></tr>"
+        html += "</table><br><li>" + validity + table_heading1 + '<th>type</th>' + table_heading2
         for check in checks:
-            html += "<li>" + check + "</li>"
-        html += "</ul><li>" + root_str + "</li><ul>"
+            html += "<tr><td>" + check["type"] + "</td><td style=text-align:center>" + check["real"] + "</td><td style=text-align:center>" + check["imaginary"] + "</td><td style=text-align:center>" + check["modulus"] + "</td></tr>"
+        html += "</table><br><li>" + root_str + table_heading1 + table_heading2
         for root in roots:
-            html += "<li>" + root + "</li>"
-        return html + "</ul></ul>"
+            html += "<tr><td style=text-align:center>" + root["real"] + "</td><td style=text-align:center>" + root["imaginary"] + "</td><td>" + root["modulus"] + "</td></tr>"
+        return html + "</tbody></table></ul>"
 
 general = [ \
     'After "...herokuapp.com" above you should type "/json/" and then your polynomial.  Input your polynomial according to one of the two formats below: "array" or "string".', \
