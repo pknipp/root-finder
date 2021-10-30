@@ -198,9 +198,13 @@ def parse_roots(str_in, json):
 
     roots = zroots(a, True)
     n = 16
+    # The product of the roots should equal the 0th coefficient divided by the last (times +/- 1)
     product = complex(1, 0)
+    # The sum of the roots should equal the 2nd-to-last coefficient (times -1)
     sum = complex(0, 0)
+    # Because complex roots occurs in conjugate pairs, the sum of imaginary parts of roots should vanish.
     sum_imag = 0
+    # The modulus of each function value should be zero.
     func_mag = 0
     for root in roots:
         product *= root
@@ -220,7 +224,6 @@ def parse_roots(str_in, json):
     if a[len(a) - 2]:
         sum /= a[len(a) - 2]
         sum -= 1
-    # roots = list(map(lambda x: str(round(x.real, n)) + (((' + ' if x.imag > 0 else ' - ') + str(abs(x.imag)) + 'j') if x.imag else ''), roots))
     heading = "RESULTS"
     coefs = []
     for i in range(len(a)):
@@ -241,7 +244,15 @@ def parse_roots(str_in, json):
             ]
     root_str = "ROOTS (Complex ones occur in conjugate pairs.)"
     roots = list(filter(lambda root: root.imag >= 0, roots))
-    roots = list(map(lambda root: {"real": str(my_int(root.real)), "imaginary": str(my_int(root.imag)), "modulus": str(cmath.polar(root)[0])}, roots))
+    for root in roots:
+        factor = var
+        if root.imag:
+            factor += '<sup>2</sup> ' + (' - ' if root.real > 0 else ' + ') + str(2 * root.real) + var + ' + ' + str(cmath.polar(root)[0] ** 2)
+        else:
+            factor += (" - " if root.real > 0 else ' + ') + str(abs(root.real))
+        root = {"real": str(my_int(root.real)), "imaginary": str(my_int(root.imag)), "modulus": str(cmath.polar(root)[0]), "factor": factor}
+        print("Is root an instance of a dict:", isinstance(root, dict))
+        print("root = ", root)
 
     # Construct string which represents polynomial in standard form.
     standard_form = ''
@@ -265,7 +276,7 @@ def parse_roots(str_in, json):
     formats[0]["string"] = standard_form
 
     table_heading1 = "<table border='1'><thead><tr>"
-    table_heading2 = '<th>real part</th><th>imaginary part</th><th>modulus</th></tr></thead><tbody>'
+    table_heading2 = '<th>real part</th><th>imaginary part</th><th>modulus</th>'
     if json:
         return {heading: [{your_poly: formats}, {validity: checks}, {root_str: roots}]}
     else:
@@ -273,12 +284,13 @@ def parse_roots(str_in, json):
         html += "<ul><li>" + your_poly + "</li><table border='1'><tbody>"
         for format in formats:
             html += "<td>" + format["type"] + "</td><td>" + format["string"] + "</td></tr>"
-        html += "</table><br><li>" + validity + table_heading1 + '<th>type</th>' + table_heading2
+        html += "</table><br><li>" + validity + table_heading1 + '<th>type</th>' + table_heading2 + '</tr></thead><tbody>'
         for check in checks:
             html += "<tr><td>" + check["type"] + "</td><td style=text-align:center>" + check["real"] + "</td><td style=text-align:center>" + check["imaginary"] + "</td><td style=text-align:center>" + check["modulus"] + "</td></tr>"
-        html += "</table><br><li>" + root_str + table_heading1 + table_heading2
+        html += "</table><br><li>" + root_str + table_heading1 + table_heading2 + "<th>irreducible factor</th></tr></tr><tbody>"
         for root in roots:
-            html += "<tr><td style=text-align:center>" + root["real"] + "</td><td style=text-align:center>" + root["imaginary"] + "</td><td>" + root["modulus"] + "</td></tr>"
+            print("root = ", root)
+            html += "<tr><td style=text-align:center>" + root["real"] + "</td><td style=text-align:center>" + root["imaginary"] + "</td><td>" + root["modulus"] + "</td><td>" + root["factor"] + "</td></tr>"
         return html + "</tbody></table></ul>"
 
 general = [ \
