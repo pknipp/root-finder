@@ -1,11 +1,8 @@
-import os, cmath
+import cmath
 from flask import Flask
-from root_finder.config import Config
 from . import helper
 
 app = Flask(__name__)
-app.config.from_object(Config)
-
 
 # The following are used to wrap the html string created for server-side rendering.
 top = "<head><title>Root finder</title></head><body>"
