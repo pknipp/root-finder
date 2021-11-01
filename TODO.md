@@ -1,3 +1,2 @@
 - Import numpy, if that helps to polish properly
-- Figure out how to have a favicon, presumably with an absolute path.
 - Give user the option of sorting by root's real part, imaginary part, modulus, or phase.
