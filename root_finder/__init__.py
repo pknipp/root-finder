@@ -21,6 +21,7 @@ def react_root(path):
 @app.route('/')
 def hello():
     html = top + "<h3><p align=center>Instructions:</p></h3>"
+    html += '<a href="https://pknipp.github.io/math">Return</a> to the Math APIs page.'
     html += "<div>General:</div><ul>"
     for instruction in helper.general:
         html += "<li>" + instruction + "</li>"
