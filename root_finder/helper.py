@@ -315,7 +315,7 @@ array = [ \
     'Example: 1+5x-4x**3 would be represented by the following array: [1,5,0,-4].', \
 ]
 string = [ \
-    'Each of the polynomial\'s coefficients may be represented as an integer or decimal but not as fraction, because "/" has special meaning in a URL.',\
+    'Each of the polynomial\'s coefficients may be represented as an integer or decimal but not as fraction, because "/" has special meaning in a URL. Do not include a comma in any number (even one exceeding one thousand), because that will confuse the parser.',\
     'Your variable must be a string which starts with a letter (upper- or lowercase) or underscore. If your variable has multiple characters, they may only be letters, underscores, or digits.',\
     'Represent the product of a coefficient and a variable in the usual sequence: coefficient before variable, and represent the multiplication operation either by * or in an implied manner (ie with nothing separating the coefficient and the variable).',\
     'Represent "x squared" either as "x**2" (preferably) or "x^2" (OK) but not as "x*x". Do likewise for larger powers.', \
