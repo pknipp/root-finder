@@ -305,21 +305,21 @@ def parse_roots(str_in, json):
         return html + "</tbody></table></ul>"
 
 general = [ \
-    'After "...herokuapp.com" above you should type "/json/" and then your polynomial.  Input your polynomial according to one of the two formats below: "array" or "string".', \
-    'If you want the response in html rather than in json, omit "/json" from the address.', \
-    'Spaces are allowed - but discouraged - in whichever format you use, because a "%20" will replace each space after you hit "return", thereby making the address uglier.', \
+    'After <tt>...herokuapp.com</tt> above you should type <tt>/json/</tt> and then your polynomial.  Input your polynomial according to one of the two formats below: "array" or "string".', \
+    'If you want the response in html rather than in json, omit <tt>/json</tt> from the address.', \
+    'Spaces are allowed - but discouraged - in whichever format you use, because <tt>%20</tt> will replace each space after you hit <tt>return</tt>, thereby making the address uglier.', \
     'The resulting page will show some "validity checks", along with the roots themselves.' \
 ]
 array = [ \
     'This is a comma-separated list of coefficients, enclosed by square brackets.  List the coefficients in order of increasing exponent, ie starting with the "constant" term.', \
-    'Example: 1+5x-4x**3 would be represented by the following array: [1,5,0,-4].', \
+    'Example: 1 + 5<i>x</i> - 4<i>x</i><sup>3</sup> would be represented by the following array: <tt>[1,5,0,-4]</tt>.', \
 ]
 string = [ \
-    'Each of the polynomial\'s coefficients may be represented as an integer or decimal but not as fraction, because "/" has special meaning in a URL. Do not include a comma in any number (even one exceeding one thousand), because that will confuse the parser.',\
+    'Each of the polynomial\'s coefficients may be represented as an integer or decimal but not as fraction, because "<tt>/</tt>" has special meaning in a URL. Do not include a comma in any number (even if exceeding 1000), because that will confuse the parser.',\
     'Your variable must be a string which starts with a letter (upper- or lowercase) or underscore. If your variable has multiple characters, they may only be letters, underscores, or digits.',\
-    'Represent the product of a coefficient and a variable in the usual sequence: coefficient before variable, and represent the multiplication operation either by * or in an implied manner (ie with nothing separating the coefficient and the variable).',\
-    'Represent "x squared" either as "x**2" (preferably) or "x^2" (OK) but not as "x*x". Do likewise for larger powers.', \
-    'You need not represent the absolute value of a coefficient if it equals 1.  For instance you may type "x" instead of "1x" or "1*x", or "-x" instead of "-1x" or "-1*x".',\
+    'Represent the product of a coefficient and a variable in the usual sequence: coefficient before variable, and represent the multiplication operation either by <tt>*</tt> or in an implied manner (ie with nothing separating the coefficient and the variable).',\
+    'Represent <i>x</i><sup>2</sup> either as <tt>x**2</tt> (preferably) or <tt>x^2</tt> (OK) but not as <tt>x*x</tt>. Do likewise for larger powers.', \
+    'You need not represent the absolute value of a coefficient if it equals 1.  For instance you may type <tt>x</tt> instead of <tt>1x</tt> or <tt>1*x</tt>, or <tt>-x</tt> instead of <tt>-1x</tt> or <tt>-1*x</tt>.',\
     'You need not type the polynomial\'s terms in any particular order (such as largest power first or last).',\
-    'You need not include any terms in the polynomial for which the coefficient is zero. For instance you may write "4x**2-9" instead of "4x**2+0x-9".',\
+    'You need not include any terms in the polynomial for which the coefficient is zero. For instance you may type <tt>4x**2-9</tt> instead of <tt>4x**2+0x-9</tt>.',\
 ]

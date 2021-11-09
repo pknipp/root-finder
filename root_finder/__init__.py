@@ -20,7 +20,7 @@ def react_root(path):
 
 @app.route('/')
 def hello():
-    html = top + "<h3><p align=center>Instructions:</p></h3>"
+    html = top + "<h3><p align=center>Instructions for finding roots of a polynomial:</p></h3>"
     html += '<p align=center><a href="https://pknipp.github.io/math">Return</a> to the Math APIs page.'
     html += "<div>General:</div><ul>"
     for instruction in helper.general:
