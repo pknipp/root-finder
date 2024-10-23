@@ -38,7 +38,7 @@ def hello():
 def return_html(str_in):
     results = helper.parse_roots(str_in, False)
     if isinstance(results, str):
-        return top + results + bottom
+        return top + results + "</body>"
     else:
         return '<h1>' + results["error"] + '</h1>'
 

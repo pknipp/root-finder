@@ -292,7 +292,7 @@ def parse_roots(str_in, json):
     if json:
         return {heading: [{your_poly: formats}, {validity: checks}, {root_str: roots}]}
     else:
-        html = "<p align=center>" + heading + "</p>"
+        html = "<p align=center>" + heading + "<br/>" + '<a href="https://root-finder.herokuapp.com/">Return</a>&nbsp;to the instructions page.</p>'
         html += "<ul><li>" + your_poly + "</li><table border='1'><tbody>"
         for format in formats:
             html += "<td>" + format["type"] + "</td><td>" + format["string"] + "</td></tr>"
