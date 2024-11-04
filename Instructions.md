@@ -20,10 +20,10 @@ If problems arise, try deleting .venv and repeating ```pipenv install...``` etc.
 1. Push your docker container to heroku from the root directory of your project.
    (This will build the dockerfile and push the image to your heroku container registry.)
 
-   ```heroku container:push web -a {NAME_OF_HEROKU_APP}```
+   ```heroku container:push web -a root-finder```
 1. Release your docker container to heroku via
 
-   ```heroku container:release web -a {NAME_OF_HEROKU_APP}```
+   ```heroku container:release web -a root-finder```
 1. Under Settings find "Config Vars" and add any additional/secret/apikey .env variables.
 1. Run
 ```docker system prune -a -f```
