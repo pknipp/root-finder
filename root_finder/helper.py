@@ -39,6 +39,7 @@ def laguer(a, x, eps, polish):
             d = x * d + b
             b = x * b + a[j]
             err = cmath.polar(b)[0] + abx * err
+        print (iter, f, d, b)
         err *= epss
         if (cmath.polar(b)[0] <= err):
             return x
