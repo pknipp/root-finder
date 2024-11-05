@@ -28,6 +28,7 @@ def laguer(a, x, eps, polish):
     maxit = 100
     dxold = cmath.polar(x)[0]
     for iter in range(0, maxit):
+        print (iter, x)
         b = a[m]
         err = cmath.polar(b)[0]
         d = zero
