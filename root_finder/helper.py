@@ -51,6 +51,7 @@ def laguer(a, x, eps, polish):
         if cmath.polar(gp)[0] < cmath.polar(gm)[0]:
             gp = gm
         dx = m / gp
+        print (g, g2, h, sq, gp, dx)
         x1 = x - dx
         if (x == x1):
             return x
