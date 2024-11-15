@@ -38,7 +38,6 @@ def laguer(a, x, eps, polish):
             d = x * d + b
             b = x * b + a[j]
             err = cmath.polar(b)[0] + abx * err
-        print (iter, x, f, d, b)
         err *= epss
         if (cmath.polar(b)[0] <= err):
             return x
@@ -51,7 +50,6 @@ def laguer(a, x, eps, polish):
         if cmath.polar(gp)[0] < cmath.polar(gm)[0]:
             gp = gm
         dx = m / gp
-        print (g, g2, h, sq, gp, dx)
         x1 = x - dx
         if (x == x1):
             return x
@@ -294,7 +292,7 @@ def parse_roots(str_in, json):
     if json:
         return {heading: [{your_poly: formats}, {validity: checks}, {root_str: roots}]}
     else:
-        html = "<p align=center>" + heading + "<br/>" + '<a href="https://root-finder.herokuapp.com/">Return</a>&nbsp;to the instructions page.</p>'
+        html = '<div style="padding: 30px;"><p align=center>' + heading + "<br/>" + '<a href="https://root-finder.herokuapp.com/">Return</a>&nbsp;to the instructions page.</p>'
         html += "<ul><li>" + your_poly + "</li><table border='1'><tbody>"
         for format in formats:
             html += "<td>" + format["type"] + "</td><td>" + format["string"] + "</td></tr>"
@@ -304,7 +302,7 @@ def parse_roots(str_in, json):
         html += "</table><br><li>" + root_str + table_heading1 + table_heading2 + "</th><th>phase</th><th>irreducible factor</th></tr></tr><tbody>"
         for root in roots:
             html += "<tr><td style=text-align:center>" + root["real"] + "</td><td style=text-align:center>" + root["imaginary"] + "</td><td style=text-align:center>" + root["modulus"] + "</td><td style=text-align:center >" + root["phase"] + "</td><td style=text-align:center>" + root["factor"] + "</td></tr>"
-        return html + "</tbody></table></ul>"
+        return html + "</div></tbody></table></ul>"
 
 general = [ \
     'After <tt>...herokuapp.com</tt> above you should type <tt>/json/</tt> and then your polynomial.  Input your polynomial according to one of the two formats below: "array" or "string".', \
