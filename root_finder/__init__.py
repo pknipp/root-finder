@@ -42,6 +42,6 @@ def return_html(str_in):
     else:
         return '<h1>' + results["error"] + '</h1>'
 
-@app.route('/json/<str_in>')
+@app.route('/api/<str_in>')
 def return_json(str_in):
     return helper.parse_roots(str_in, True)

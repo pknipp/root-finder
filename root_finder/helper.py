@@ -305,8 +305,7 @@ def parse_roots(str_in, json):
         return html + "</tbody></table></ul>"
 
 general = [ \
-    'After <tt>...herokuapp.com</tt> above you should type <tt>/json/</tt> and then your polynomial.  Input your polynomial according to one of the two formats below: "array" or "string".', \
-    'If you want the response in html rather than in json, omit <tt>/json</tt> from the address.', \
+    'After <tt>...herokuapp.com</tt> above you should type either <tt>/api/</tt> or <tt>/</tt> if you want the results returned in json or html respectively.  You should then type your polynomial according to one of the two formats below: "array" or "string".', \
     'Spaces are allowed - but discouraged - in whichever format you use, because <tt>%20</tt> will replace each space after you hit <tt>return</tt>, thereby making the address uglier.', \
     'The resulting page will show some "validity checks", along with the roots themselves.' \
 ]
