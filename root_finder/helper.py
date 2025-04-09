@@ -309,16 +309,26 @@ general = [ \
     'Spaces are allowed - but discouraged - in whichever format you use, because <tt>%20</tt> will replace each space after you hit <tt>return</tt>, thereby making the address uglier.', \
     'The resulting page will show some "validity checks", along with the roots themselves.' \
 ]
+base_url = "https://root-finder.herokuapp.com"
+frag1 = "/[1,5,0,-4]"
+frag2 = "/1-4x**3+5x"
 array = [ \
     'This is a comma-separated list of coefficients, enclosed by square brackets.  List the coefficients in order of increasing exponent, ie starting with the "constant" term.', \
-    'Example: 1 + 5<i>x</i> - 4<i>x</i><sup>3</sup> would be represented by the following array: <tt>[1,5,0,-4]</tt>.', \
+
+    f"Example: <a href={base_url}{frag1}>Click here</a> for the url ...herokuapp.com{frag1}, which represents the polynomial 1 + 5<I>x</I> - 4<I>x</I><sup>3</sup>.", \
 ]
+
 string = [ \
     'Each of the polynomial\'s coefficients may be represented as an integer or decimal but not as fraction, because "<tt>/</tt>" has special meaning in a URL. Do not include a comma in any number (even if exceeding 1000), because that will confuse the parser.',\
     'Your variable must be a string which starts with a letter (upper- or lowercase) or underscore. If your variable has multiple characters, they may only be letters, underscores, or digits.',\
+
     'Represent the product of a coefficient and a variable in the usual sequence: coefficient before variable, and represent the multiplication operation either by <tt>*</tt> or in an implied manner (ie with nothing separating the coefficient and the variable).',\
+
     'Represent <i>x</i><sup>2</sup> either as <tt>x**2</tt> (preferably) or <tt>x^2</tt> (OK) but not as <tt>x*x</tt>. Do likewise for larger powers.', \
+
     'You need not represent the absolute value of a coefficient if it equals 1.  For instance you may type <tt>x</tt> instead of <tt>1x</tt> or <tt>1*x</tt>, or <tt>-x</tt> instead of <tt>-1x</tt> or <tt>-1*x</tt>.',\
+
     'You need not type the polynomial\'s terms in any particular order (such as largest power first or last).',\
+    
     'You need not include any terms in the polynomial for which the coefficient is zero. For instance you may type <tt>4x**2-9</tt> instead of <tt>4x**2+0x-9</tt>.',\
 ]
