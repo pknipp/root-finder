@@ -146,8 +146,8 @@ def parse_roots(str_in, json):
         string = strs[0]
         signs = ['+', '-']
         for sign in signs:
-            if sign in string:
-                i = string.index(sign, 1)
+            if sign in string[1:]:
+                i = string.find(sign, 1)
                 strs[0] = string[0:i]
                 strs.insert(1, "**0" + string[i:])
 
@@ -332,5 +332,5 @@ string = [ \
 
     'You need not include any terms in the polynomial for which the coefficient is zero. For instance you may type <tt>4x**2-9</tt> instead of <tt>4x**2+0x-9</tt>.',\
 
-    f"Example: <a href={base_url}{frag2}>Click here</a> for the url ...herokuapp.com{frag2}, which represents the same polynomial as above, but intentionally misordered in order to demonstrate the lack of effect that this has upon the results.", \
+    f"Example: <a href={base_url}{frag2}>Click here</a> for the url ...herokuapp.com{frag2}, which represents the same polynomial as above, but intentionally misordered to demonstrate the lack of effect that this has upon the results.", \
 ]
