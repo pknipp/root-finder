@@ -329,6 +329,8 @@ string = [ \
     'You need not represent the absolute value of a coefficient if it equals 1.  For instance you may type <tt>x</tt> instead of <tt>1x</tt> or <tt>1*x</tt>, or <tt>-x</tt> instead of <tt>-1x</tt> or <tt>-1*x</tt>.',\
 
     'You need not type the polynomial\'s terms in any particular order (such as largest power first or last).',\
-    
+
     'You need not include any terms in the polynomial for which the coefficient is zero. For instance you may type <tt>4x**2-9</tt> instead of <tt>4x**2+0x-9</tt>.',\
+
+    f"Example: <a href={base_url}{frag2}>Click here</a> for the url ...herokuapp.com{frag2}, which represents the same polynomial as above, but intentionally misordered in order to demonstrate the lack of effect that this has upon the results.", \
 ]
